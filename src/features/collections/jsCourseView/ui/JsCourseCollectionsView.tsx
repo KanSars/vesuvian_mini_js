@@ -12,9 +12,19 @@ export const JsCourseCollectionsView: FC<JsCourseCollectionsViewProps> = ({
   onCollectionCardClick
 }) => {
   const scrollToSection = (sectionId: string) => {
-    document.getElementById(sectionId)?.scrollIntoView({
+    const section = document.getElementById(sectionId);
+    const scrollContainer = document.querySelector('[data-js-course-content]');
+
+    if (!(section instanceof HTMLElement) || !(scrollContainer instanceof HTMLElement)) {
+      return;
+    }
+
+    const containerTop = scrollContainer.getBoundingClientRect().top;
+    const sectionTop = section.getBoundingClientRect().top;
+
+    scrollContainer.scrollTo({
+      top: scrollContainer.scrollTop + sectionTop - containerTop,
       behavior: 'smooth',
-      block: 'start',
     });
   };
 
@@ -34,7 +44,7 @@ export const JsCourseCollectionsView: FC<JsCourseCollectionsViewProps> = ({
       </nav>
 
       <div className={styles.layout}>
-        <aside className={styles.sideNav} aria-label="Разделы курса">
+        <aside className={styles.sideNav} aria-label="Разделы курса" data-js-course-side-nav>
           {jsCourseParts.map((part) => (
             <div key={part.id} className={styles.sideNavGroup}>
               <span className={styles.sideNavTitle}>{part.title}</span>
@@ -52,7 +62,7 @@ export const JsCourseCollectionsView: FC<JsCourseCollectionsViewProps> = ({
           ))}
         </aside>
 
-        <div className={styles.content}>
+        <div className={styles.content} data-js-course-content>
           {jsCourseParts.map((part) => (
             <section key={part.id} id={part.id} className={styles.part}>
               <header className={styles.partHeader}>
