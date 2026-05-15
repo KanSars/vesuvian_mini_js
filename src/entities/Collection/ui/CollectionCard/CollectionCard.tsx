@@ -12,7 +12,8 @@ export const CollectionCard: FC<CollectionCardProps> = ({ collection, onCollecti
   const { name, tags } = collection;
 
   return (
-    <div 
+    <button
+      type="button"
       onClick={() => onCollectionCardClick(collection)}
       className={styles.collectionCard}
     >
@@ -22,6 +23,6 @@ export const CollectionCard: FC<CollectionCardProps> = ({ collection, onCollecti
           {tags.map(tag => <CardTag key={tag.id} tagText={tag.name} />)}
         </div>
       )}
-    </div>
+    </button>
   );
 };

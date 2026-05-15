@@ -1,4 +1,4 @@
-import { Button, IconButton } from 'shared/ui/Button/Button';
+import { Button } from 'shared/ui/Button/Button';
 import styles from './Footer.module.scss';
 
 export const Footer = () => {

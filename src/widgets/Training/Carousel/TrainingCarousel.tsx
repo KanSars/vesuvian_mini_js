@@ -19,8 +19,25 @@ export const TrainingCarousel: FC<TrainingCarouselProps> = ({ cards, onComplete,
   const [thirdCardClass, setThirdCardClass] = useState(styles.next);
 
   useEffect(() => {
-    onProgressUpdate(currentIndex + 1);
-  }, [currentIndex, onProgressUpdate]);
+    if (cards.length > 0) {
+      onProgressUpdate(currentIndex + 1);
+    }
+  }, [cards.length, currentIndex, onProgressUpdate]);
+
+  useEffect(() => {
+    if (currentIndex >= cards.length) {
+      setCurrentIndex(Math.max(cards.length - 1, 0));
+      setIsFlipped(false);
+    }
+  }, [cards.length, currentIndex]);
+
+  if (cards.length === 0) {
+    return (
+      <div className={styles.carouselContainer}>
+        <div className={styles.emptyState}>Карточек для тренировки пока нет</div>
+      </div>
+    );
+  }
 
   const handleFlip = () => {
     setIsFlipped(!isFlipped);

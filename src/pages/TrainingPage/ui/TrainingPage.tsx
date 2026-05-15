@@ -1,4 +1,4 @@
-import { FC, useState, useEffect } from 'react';
+import { FC, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { TrainingCarousel } from 'widgets/Training/Carousel/TrainingCarousel';
 import { TrainingProgress } from 'widgets/Training/ProgressBar/ProgressBar';

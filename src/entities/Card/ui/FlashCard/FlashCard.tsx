@@ -11,7 +11,12 @@ interface FlashCardProps {
 
 export const FlashCard: FC<FlashCardProps> = ({ term, definition, hint, isFlipped, onClick }) => {
   return (
-    <div className={styles.flipCard} onClick={onClick}>
+    <button
+      type="button"
+      className={styles.flipCard}
+      onClick={onClick}
+      aria-label={isFlipped ? `Показать термин: ${term}` : `Показать определение для: ${term}`}
+    >
       <div className={`${styles.flipCardInner} ${isFlipped ? styles.isFlipped : ''}`}>
         <div className={styles.flipCardFront}>
           <div className={styles.cardContent}>
@@ -25,6 +30,6 @@ export const FlashCard: FC<FlashCardProps> = ({ term, definition, hint, isFlippe
           </div>
         </div>
       </div>
-    </div>
+    </button>
   );
 };

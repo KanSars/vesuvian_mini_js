@@ -16,6 +16,8 @@
   transition: transform 0.2s;
   color: #000;
   box-sizing: border-box;
+  border: 0;
+  font: inherit;
 
   &:hover {
     transform: scale(1.02);
