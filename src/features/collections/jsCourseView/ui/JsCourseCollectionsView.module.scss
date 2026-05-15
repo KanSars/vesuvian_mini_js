@@ -18,7 +18,7 @@
   width: 100vw;
   margin: 0 0 0;
   margin-left: calc((100% - 100vw) / 2);
-  padding: 16px 42px;
+  padding: 4px 42px;
   background: linear-gradient(180deg, $gradient-start 0%, rgba($gradient-start, 0.98) 100%);
   border-bottom: 1px solid rgba($white, 0.35);
   box-shadow: 0 14px 24px rgba($shadow, 0.22);
@@ -47,6 +47,12 @@
     color: $grey;
     transform: translateY(-1px);
   }
+}
+
+.partButtonActive {
+  background: $primary-green;
+  color: $grey;
+  box-shadow: 0 0 0 1px rgba($white, 0.18);
 }
 
 .layout {
@@ -84,7 +90,9 @@
 }
 
 .sectionButton {
+  position: relative;
   padding: 7px 8px;
+  padding-left: 14px;
   border-radius: 5px;
   background: transparent;
   color: $silver;
@@ -94,6 +102,23 @@
   &:focus-visible {
     background: rgba($primary-green, 0.1);
     color: $white;
+  }
+}
+
+.sectionButtonActive {
+  background: rgba($primary-green, 0.14);
+  color: $white;
+  font-weight: 700;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 8px;
+    bottom: 8px;
+    left: 4px;
+    width: 3px;
+    border-radius: 999px;
+    background: $primary-green;
   }
 }
 
@@ -152,7 +177,7 @@
   .topNav {
     top: 0;
     flex-wrap: wrap;
-    padding: 14px 20px;
+    padding: 4px 20px;
   }
 
   .layout {
