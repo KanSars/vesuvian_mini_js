@@ -1,7 +1,10 @@
+import { useNavigate } from 'react-router-dom';
 import { Button } from 'shared/ui/Button/Button';
 import styles from './Footer.module.scss';
 
 export const Footer = () => {
+  const navigate = useNavigate();
+
   return (
     <footer className={`${styles.footer} small-text`}>
       <ul className={styles.footerNav}>
@@ -10,6 +13,7 @@ export const Footer = () => {
             btnStyle='link'
             fontSize='small'
             label='О проекте'
+            onClick={() => navigate('/about')}
           />
         </li>
         {/* <li>

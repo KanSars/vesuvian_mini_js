@@ -4,6 +4,7 @@ import { Footer } from 'widgets/Footer';
 import { MainPage } from 'pages/MainPage';
 import { CollectionsPage } from 'pages/CollectionsPage';
 import { Item2Page } from 'pages/Item2Page';
+import { AboutPage } from 'pages/AboutPage';
 import TrainingPage from 'pages/TrainingPage/ui/TrainingPage';
 import styles from './App.module.scss';
 
@@ -19,6 +20,7 @@ export const App = () => {
               <Route path="/" element={<MainPage />} />
               <Route path="/collections" element={<CollectionsPage />} />
               <Route path="/training/:id" element={<TrainingPage />} />
+              <Route path="/about" element={<AboutPage />} />
               <Route path="/item2" element={<Item2Page />} />
             </Routes>
           </main>
