@@ -1,0 +1,162 @@
+@use "shared/styles/color.scss" as *;
+
+.courseView {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.topNav {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  width: 100vw;
+  margin: -20px 0 0;
+  margin-left: calc((100% - 100vw) / 2);
+  padding: 16px 42px;
+  background: linear-gradient(180deg, $gradient-start 0%, rgba($gradient-start, 0.98) 100%);
+  border-bottom: 1px solid rgba($white, 0.35);
+  box-shadow: 0 14px 24px rgba($shadow, 0.22);
+  box-sizing: border-box;
+}
+
+.partButton,
+.sectionButton {
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+}
+
+.partButton {
+  min-height: 40px;
+  padding: 9px 16px;
+  border-radius: 5px;
+  background: rgba($white, 0.08);
+  color: $white;
+  transition: background-color 0.2s, color 0.2s, transform 0.2s;
+
+  &:hover,
+  &:focus-visible {
+    background: $primary-green;
+    color: $grey;
+    transform: translateY(-1px);
+  }
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
+  padding-top: 2px;
+}
+
+.sideNav {
+  position: sticky;
+  top: 76px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-height: calc(100vh - 96px);
+  padding-right: 12px;
+  overflow: auto;
+  border-right: 1px solid rgba($primary-green, 0.14);
+}
+
+.sideNavGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sideNavTitle {
+  color: $primary-green;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.sectionButton {
+  padding: 7px 8px;
+  border-radius: 5px;
+  background: transparent;
+  color: $silver;
+  line-height: 1.25;
+
+  &:hover,
+  &:focus-visible {
+    background: rgba($primary-green, 0.1);
+    color: $white;
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  min-width: 0;
+}
+
+.part {
+  scroll-margin-top: 76px;
+}
+
+.partHeader {
+  margin-bottom: 22px;
+}
+
+.partTitle {
+  margin: 0 0 8px;
+  color: $white;
+  font-size: 32px;
+  line-height: 1.15;
+}
+
+.partDescription {
+  max-width: 760px;
+  margin: 0;
+  color: $silver;
+  line-height: 1.5;
+}
+
+.section {
+  scroll-margin-top: 88px;
+  margin-top: 28px;
+}
+
+.sectionTitle {
+  margin: 0 0 16px;
+  color: $primary-green;
+  font-size: 24px;
+  line-height: 1.2;
+}
+
+.cardsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 18px;
+}
+
+@media (max-width: 900px) {
+  .topNav {
+    top: 0;
+    flex-wrap: wrap;
+    padding: 14px 20px;
+  }
+
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .sideNav {
+    position: static;
+    max-height: none;
+    padding-right: 0;
+    border-right: 0;
+    border-bottom: 1px solid rgba($primary-green, 0.14);
+    padding-bottom: 16px;
+  }
+}

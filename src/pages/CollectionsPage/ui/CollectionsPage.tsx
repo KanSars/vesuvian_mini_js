@@ -1,6 +1,5 @@
 import { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { mockCollections } from 'entities/Collection/model/mockData';
 import { Collection } from 'entities/Collection/model/types';
 import { JsCourseCollectionsView } from 'features/collections/jsCourseView';
 import styles from './CollectionsPage.module.scss';
@@ -15,7 +14,6 @@ const CollectionsPage: FC = () => {
   return (
     <div className={styles.collectionsPage} >
       <JsCourseCollectionsView
-        collections={mockCollections}
         onCollectionCardClick={onCollectionCardClick}
       />
     </div>

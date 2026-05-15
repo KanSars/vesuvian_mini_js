@@ -2,8 +2,8 @@ import { FC, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { TrainingCarousel } from 'widgets/Training/Carousel/TrainingCarousel';
 import { TrainingProgress } from 'widgets/Training/ProgressBar/ProgressBar';
-import { mockCollections } from 'entities/Collection/model/mockData';
 import { Card } from 'entities/Card/model/types';
+import { jsCourseLessons } from 'features/collections/jsCourseView/model/courseStructure';
 import styles from './TrainingPage.module.scss';
 
 // Моковые данные для карточек (в будущем будут приходить из API по collectionId)
@@ -36,10 +36,10 @@ const TrainingPage: FC = () => {
   const [isCompleted, setIsCompleted] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   
-  const collection = mockCollections.find(c => c.collection_id === id);
-  const cards = id ? mockCards[id] : [];
+  const collection = jsCourseLessons.find(c => c.collection_id === id);
+  const cards = id ? mockCards[id] ?? [] : [];
 
-  if (!collection || !cards.length) {
+  if (!collection) {
     return (
       <div className={styles.errorPage}>
         <h2>Коллекция не найдена</h2>
@@ -64,7 +64,7 @@ const TrainingPage: FC = () => {
     <div className={styles.trainingPage}>
       <header className={styles.header}>
         <h1>Тренировка: {collection.name}</h1>
-        <TrainingProgress current={currentStep} total={cards.length} />
+        {cards.length > 0 && <TrainingProgress current={currentStep} total={cards.length} />}
       </header>
       
       <main className={styles.main}>
