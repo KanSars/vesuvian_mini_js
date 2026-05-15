@@ -1,0 +1,10 @@
+@import "../../common/styles/color.scss";
+
+.login-buttons {
+  margin-left: 50px;
+}
+
+.login-buttons > * {
+  margin-left: 20px;
+  max-height: 20px;
+}

@@ -1,0 +1,72 @@
+@use "shared/styles/color.scss" as *;
+
+.flipCard {
+  background-color: transparent;
+  width: 650px;
+  height: 370px;
+  perspective: 1000px;
+  cursor: pointer;
+}
+
+.flipCardInner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.4s;
+  transform-style: preserve-3d;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  border-radius: 15px;
+  display: flex;
+  justify-content: center;
+}
+
+.isFlipped {
+  transform: rotateY(-180deg);
+}
+
+.flipCardFront, .flipCardBack {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.flipCardFront {
+  background-color: $primary-green;
+  color: $grey;
+}
+
+.flipCardBack {
+  background-color: $dark-green;
+  color: $white;
+  transform: rotateY(180deg);
+}
+
+.cardContent {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.term {
+  font-size: 32px;
+  font-weight: bold;
+}
+
+.definition {
+  font-size: 28px;
+}
+
+.hint {
+  font-size: 14px;
+  color: $dark-grey;
+  font-style: italic;
+}

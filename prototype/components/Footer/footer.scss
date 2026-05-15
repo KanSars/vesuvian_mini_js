@@ -1,0 +1,55 @@
+@import "../../common/styles/color.scss";
+
+.footer {
+  width: 1440px;
+  padding: 0 50px;
+  height: 150px;
+  width: 100%;
+
+  background-color: transparent;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .footer-nav {
+    width: 870px;
+    height: 100px;
+
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    justify-content: space-between;
+    align-items: center;
+
+    li {
+      display: flex;
+      justify-content: center;
+
+      .socialLinks {
+        display: flex;
+        gap: 10px;
+
+        img {
+          filter: gray; /* IE6-9 */
+          -webkit-filter: grayscale(1); /* Google Chrome, Safari 6+ & Opera 15+ */
+          filter: grayscale(1); /* Microsoft Edge and Firefox 35+ */
+        }
+      }
+    }
+
+    // li:first-child {
+    //   justify-content: flex-start;
+    // }
+
+    // li:last-child {
+    //   justify-content: flex-end;
+    // }
+  }
+
+  .copyright {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: $silver;
+  }
+}

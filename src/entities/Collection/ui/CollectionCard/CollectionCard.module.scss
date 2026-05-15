@@ -1,0 +1,38 @@
+@use "shared/styles/color.scss" as *;
+
+.collectionCard {
+  width: 300px;
+  height: 180px;
+  border-radius: 10px;
+  background-color: $primary-green;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+  padding: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+  color: #000;
+  box-sizing: border-box;
+
+  &:hover {
+    transform: scale(1.02);
+  }
+}
+
+.title {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.tagsWrapper {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}

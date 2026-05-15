@@ -1,0 +1,75 @@
+@import "../../common/styles/color.scss";
+
+.link-button {
+  background-color: transparent;
+
+  padding: 0 0 0 0;
+  color: $btn-green;
+  white-space: nowrap;
+}
+
+.btn {
+  border-radius: 10px;
+  background-color: $light-light-green;
+  cursor: pointer;
+
+  padding: 8.5px 15px;
+  color: $btn-green;
+  white-space: nowrap;
+
+  border: none;
+}
+
+.big-button {
+  padding: 30px 50px;
+}
+
+.link {
+  max-height: min-content;
+  max-width: min-content;
+  cursor: pointer;
+  white-space: nowrap;
+  background-color: transparent;
+  background-color: transparent;
+  border: none;
+}
+
+.link:disabled {
+  cursor: default;
+}
+
+.text-color-white {
+  color: $white;
+}
+
+.text-color-black {
+  color: black;
+}
+
+.text-color-red {
+  color: red;
+}
+
+.text-size-small {
+  font-size:  16px;
+}
+
+.text-size-big {
+  font-size:  20px;
+}
+
+.underlined {
+  text-decoration-style: solid;
+}
+
+.btn:hover,
+.btn:focus {
+  transform: translateY(-2px);
+  transition: 0.25s;
+}
+
+.icon-button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}

@@ -1,0 +1,46 @@
+.button {
+  cursor: pointer;
+  border: none;
+  background: $button-bg;
+  color: $button-text-color;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-family: inherit;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.link {
+  background: none;
+  color: $link-button-text-color;
+  text-decoration: underline;
+  padding: 0;
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.small {
+  font-size: 12px;
+}
+
+.medium {
+  font-size: 16px;
+}
+
+.large {
+  font-size: 20px;
+}
+
+.iconButton {
+  cursor: pointer;
+  border: none;
+  background: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

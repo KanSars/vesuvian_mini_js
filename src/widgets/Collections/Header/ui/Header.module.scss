@@ -1,0 +1,40 @@
+@use "shared/styles/color.scss" as *;
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  marginBottom: 30px;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.title {
+  font-size: 32px;
+  font-weight: bold;
+  color: $white;
+}
+
+.controls {
+  display: flex;
+  gap: 20px;
+}
+
+.controlGroup {
+  display: flex;
+  align-items: center;
+}
+
+.label {
+  margin-right: 10px;
+  font-size: 14px;
+  color: $silver;
+}
+
+.select {
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid $silver;
+  background: $dark-green;
+  color: $white;
+}

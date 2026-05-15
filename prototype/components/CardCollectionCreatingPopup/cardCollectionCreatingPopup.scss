@@ -1,0 +1,34 @@
+// TODO copypast
+
+@import "../../common/styles/color.scss";
+
+.collection-creating-popup {
+  color: black;
+  //width: 564px;
+  //height: 574px;
+  border-radius: 10px;
+  
+  padding: 30px;
+
+  display: flex;
+  //padding: 30px 0px;
+  flex-direction: column;
+  //justify-content: center;
+  align-items: center;
+  gap: 30px;
+
+  //border-radius: 10px;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+
+  background-color: $btn-green;
+}
+
+.card-creating-popup {
+  color: black;
+  width: 725px;
+  border-radius: 10px;
+
+  padding: 30px 50px;
+
+  background-color: $btn-green;
+}

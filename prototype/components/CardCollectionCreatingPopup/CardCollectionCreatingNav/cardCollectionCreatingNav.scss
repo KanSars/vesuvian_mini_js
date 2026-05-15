@@ -1,0 +1,22 @@
+.card-collection-creating-nav {
+  border: 1px solid black;
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+
+  .card-collection-creating-nav-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px; //there is no gap support yet for React Native
+  }
+}
+
+.underlined {
+  border-bottom: 1px solid black;
+}
+// todo .underlined встречается ещё в button.scss
+// todo создание нового класса для цвета не думаю, что хорошая идея underlined-white
+.underlined-white {
+  border-bottom: 1px solid white;
+}

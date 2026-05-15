@@ -1,0 +1,8 @@
+@use "shared/styles/color.scss" as *;
+
+.list {
+  padding: 20px 0;
+  overflow-y: auto;
+  flex-grow: 1;
+  padding-right: 10px;
+}

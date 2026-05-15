@@ -1,0 +1,29 @@
+@import "../../common/styles/color.scss";
+
+.cards-field {
+    width: 100%;
+
+    > *:not(:first-child) {
+        margin-top: 50px;
+    }
+}
+
+.row {
+    display: flex;
+    justify-content: space-around;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.none {
+    display: none;
+}
+
+// временно, пока нет изображений с сервера
+.content_beautiful_picture {
+    max-width: 40%;
+}

@@ -1,0 +1,28 @@
+.collectionsPage {
+  padding: 20px;
+  
+  .header {
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    
+    h1 {
+      margin: 0 0 10px 0;
+    }
+    
+    .controls {
+      color: #666;
+      font-size: 0.9rem;
+    }
+  }
+  
+  .body {
+    .emptyState {
+      text-align: center;
+      padding: 50px;
+      color: #999;
+      background: #f9f9f9;
+      border-radius: 8px;
+    }
+  }
+}

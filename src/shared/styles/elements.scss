@@ -1,0 +1,28 @@
+// Semantic UI mappings.
+// Правило: здесь НЕЛЬЗЯ хранить "новые" hex-цвета.
+// Только семантические переменные/ссылки на токены из color.scss.
+
+@use "./color.scss" as *;
+
+// App/layout
+$app-bg: $light-grey;
+
+// Modal
+$modal-bg: $light-grey;
+$modal-overlay-opacity: 0.5;
+
+// Ticket card
+$ticket-card-front-bg: $btn-green;
+$ticket-card-back-bg: $primary-green;
+
+// Button
+$button-bg: $forest-green;
+$button-text-color: $btn-green;
+$link-button-text-color: $btn-green;
+
+// DropDown
+$drop-down-bg: $light-blue;
+
+// ToggleSwitch
+$toggle-switch-track-bg: $white;
+$toggle-switch-thumb-bg: $light-green;

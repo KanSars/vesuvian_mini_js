@@ -1,0 +1,10 @@
+@use "shared/styles/color.scss" as *;
+
+.cardTag {
+  background-color: #e0f2f1;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  margin: 2px;
+  color: #000;
+}

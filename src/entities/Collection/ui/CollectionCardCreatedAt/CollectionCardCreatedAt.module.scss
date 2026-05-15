@@ -1,0 +1,8 @@
+@use "shared/styles/color.scss" as *;
+
+.createdAt {
+  font-size: 12px;
+  color: $silver;
+  margin-top: 5px;
+  text-align: center;
+}

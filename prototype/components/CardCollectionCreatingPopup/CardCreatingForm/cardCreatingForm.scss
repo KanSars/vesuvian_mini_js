@@ -1,0 +1,59 @@
+.card-creating-form {
+  margin-top: 30px;
+  width: 100%;
+  position: relative;
+
+  .two-sides-card {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .card-params {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    // gap: 20px;
+
+    .hint-column {
+      width: 300px;
+
+      .card-hint-textarea {
+        border: 1px solid black;
+        border-radius: 7px;
+        width: 100%;
+        height: 100px;
+        background-color: inherit;
+        resize: none;
+      }
+    }
+
+    .collection-additional-settings-column {
+      width: 300px;
+
+      .attaching-image {
+        margin-top: 18px;
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        .attaching-image-text {
+          margin-left: 10px;
+        }
+      }
+
+    }
+  }
+
+  .button-submit-card-creation {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    gap: 20px; //there is no gap support yet for React Native
+    *:not(:first-child) {
+      margin-left: 20px;
+    }
+  }
+}

@@ -1,0 +1,15 @@
+.collection-page-group {
+  width: 100%;
+  margin-top: 39px;
+
+  .collection-cards-wrapper {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-column-gap: 110px;
+    grid-row-gap: 70px;
+
+    .collection-card-wrapper {
+      margin-top: 39px;
+    }
+  }
+}

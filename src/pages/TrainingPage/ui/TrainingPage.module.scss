@@ -1,0 +1,83 @@
+@use "shared/styles/color.scss" as *;
+
+.trainingPage {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  color: $white;
+}
+
+.header {
+  margin-bottom: 40px;
+  text-align: center;
+  
+  h1 {
+    margin-bottom: 20px;
+    font-size: 24px;
+  }
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.congratulations {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+  color: $white;
+
+  h1 {
+    font-size: 48px;
+    color: $primary-green;
+    margin-bottom: 20px;
+  }
+
+  p {
+    font-size: 20px;
+    margin-bottom: 40px;
+  }
+}
+
+.backButton {
+  padding: 15px 30px;
+  background-color: $primary-green;
+  border: none;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s;
+  color: $grey;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.errorPage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: $white;
+
+  button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: $primary-green;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    color: $grey;
+  }
+}
