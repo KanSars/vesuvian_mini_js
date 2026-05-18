@@ -77,6 +77,7 @@ export const TrainingCarousel: FC<TrainingCarouselProps> = ({ cards, onComplete,
             <FlashCard 
               term={prevCard.term} 
               definition={prevCard.definition} 
+              code={prevCard.code}
               hint={prevCard.hint}
               isFlipped={false}
               onClick={() => {}}
@@ -88,6 +89,7 @@ export const TrainingCarousel: FC<TrainingCarouselProps> = ({ cards, onComplete,
           <FlashCard 
             term={currentCard.term} 
             definition={currentCard.definition} 
+            code={currentCard.code}
             hint={currentCard.hint}
             isFlipped={isFlipped}
             onClick={handleFlip}
@@ -99,6 +101,7 @@ export const TrainingCarousel: FC<TrainingCarouselProps> = ({ cards, onComplete,
             <FlashCard 
               term={nextCard.term} 
               definition={nextCard.definition} 
+              code={nextCard.code}
               hint={nextCard.hint}
               isFlipped={false}
               onClick={() => {}}

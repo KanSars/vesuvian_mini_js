@@ -2,6 +2,7 @@ export interface Card {
   id: string;
   term: string;
   definition: string;
+  code?: string;
   hint?: string;
   imageURL?: string;
 }

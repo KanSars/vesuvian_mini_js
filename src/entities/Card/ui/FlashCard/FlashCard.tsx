@@ -4,12 +4,13 @@ import styles from './FlashCard.module.scss';
 interface FlashCardProps {
   term: string;
   definition: string;
+  code?: string;
   hint?: string;
   isFlipped: boolean;
   onClick: () => void;
 }
 
-export const FlashCard: FC<FlashCardProps> = ({ term, definition, hint, isFlipped, onClick }) => {
+export const FlashCard: FC<FlashCardProps> = ({ term, definition, code, hint, isFlipped, onClick }) => {
   return (
     <button
       type="button"
@@ -27,6 +28,11 @@ export const FlashCard: FC<FlashCardProps> = ({ term, definition, hint, isFlippe
         <div className={styles.flipCardBack}>
           <div className={styles.cardContent}>
             <span className={styles.definition}>{definition}</span>
+            {code && (
+              <pre className={styles.codeBlock}>
+                <code>{code}</code>
+              </pre>
+            )}
           </div>
         </div>
       </div>
