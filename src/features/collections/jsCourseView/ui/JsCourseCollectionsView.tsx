@@ -1,8 +1,58 @@
-import { FC, UIEvent, useMemo, useRef, useState } from 'react';
+import { FC, UIEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { Collection } from 'entities/Collection/model/types';
 import { CollectionCard } from 'entities/Collection/ui/CollectionCard/CollectionCard';
 import { jsCourseParts } from '../model/courseStructure';
 import styles from './JsCourseCollectionsView.module.scss';
+
+const JS_COURSE_SCROLL_STATE_KEY = 'js-course-collections-scroll-state';
+let savedScrollStateFallback: JsCourseScrollState | null = null;
+
+interface JsCourseScrollState {
+  scrollTop: number;
+  activePartId: string;
+  activeSectionId: string;
+}
+
+const getSessionStorage = () => {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+
+  try {
+    return window.sessionStorage ?? null;
+  } catch {
+    return null;
+  }
+};
+
+const getSavedScrollState = (): JsCourseScrollState | null => {
+  const sessionStorage = getSessionStorage();
+
+  if (!sessionStorage) {
+    return savedScrollStateFallback;
+  }
+
+  const savedState = sessionStorage.getItem(JS_COURSE_SCROLL_STATE_KEY);
+
+  if (!savedState) {
+    return savedScrollStateFallback;
+  }
+
+  try {
+    return JSON.parse(savedState) as JsCourseScrollState;
+  } catch {
+    return savedScrollStateFallback;
+  }
+};
+
+const setSavedScrollState = (scrollState: JsCourseScrollState) => {
+  savedScrollStateFallback = scrollState;
+  const sessionStorage = getSessionStorage();
+
+  if (sessionStorage) {
+    sessionStorage.setItem(JS_COURSE_SCROLL_STATE_KEY, JSON.stringify(scrollState));
+  }
+};
 
 interface JsCourseCollectionsViewProps {
   onCollectionCardClick: (collection: Collection) => void;
@@ -13,8 +63,10 @@ export const JsCourseCollectionsView: FC<JsCourseCollectionsViewProps> = ({
 }) => {
   const initialPartId = jsCourseParts[0]?.id ?? '';
   const initialSectionId = jsCourseParts[0]?.sections[0]?.id ?? '';
-  const [activePartId, setActivePartId] = useState(initialPartId);
-  const [activeSectionId, setActiveSectionId] = useState(initialSectionId);
+  const initialScrollState = getSavedScrollState();
+  const [activePartId, setActivePartId] = useState(initialScrollState?.activePartId ?? initialPartId);
+  const [activeSectionId, setActiveSectionId] = useState(initialScrollState?.activeSectionId ?? initialSectionId);
+  const contentRef = useRef<HTMLDivElement | null>(null);
   const programmaticScrollTimeoutRef = useRef<number | undefined>(undefined);
 
   const activePart = useMemo(() => (
@@ -32,9 +84,43 @@ export const JsCourseCollectionsView: FC<JsCourseCollectionsViewProps> = ({
     return result;
   }, []);
 
+  useEffect(() => {
+    if (!initialScrollState || !contentRef.current) {
+      return;
+    }
+
+    const animationFrameId = window.requestAnimationFrame(() => {
+      if (contentRef.current) {
+        contentRef.current.scrollTop = initialScrollState.scrollTop;
+      }
+    });
+
+    return () => window.cancelAnimationFrame(animationFrameId);
+  }, []);
+
+  const saveScrollState = (
+    scrollTop: number,
+    nextActivePartId: string,
+    nextActiveSectionId: string
+  ) => {
+    setSavedScrollState({
+      scrollTop,
+      activePartId: nextActivePartId,
+      activeSectionId: nextActiveSectionId,
+    });
+  };
+
+  const saveCurrentScrollState = () => {
+    saveScrollState(
+      contentRef.current?.scrollTop ?? 0,
+      activePartId,
+      activeSectionId
+    );
+  };
+
   const scrollToSection = (sectionId: string) => {
     const section = document.getElementById(sectionId);
-    const scrollContainer = document.querySelector('[data-js-course-content]');
+    const scrollContainer = contentRef.current;
 
     if (!(section instanceof HTMLElement) || !(scrollContainer instanceof HTMLElement)) {
       return;
@@ -56,9 +142,11 @@ export const JsCourseCollectionsView: FC<JsCourseCollectionsViewProps> = ({
 
   const onPartButtonClick = (partId: string) => {
     const part = jsCourseParts.find((item) => item.id === partId);
+    const nextSectionId = part?.sections[0]?.id ?? partId;
 
     setActivePartId(partId);
-    setActiveSectionId(part?.sections[0]?.id ?? partId);
+    setActiveSectionId(nextSectionId);
+    saveScrollState(contentRef.current?.scrollTop ?? 0, partId, nextSectionId);
     scrollToSection(partId);
   };
 
@@ -70,6 +158,7 @@ export const JsCourseCollectionsView: FC<JsCourseCollectionsViewProps> = ({
     }
 
     setActiveSectionId(sectionId);
+    saveScrollState(contentRef.current?.scrollTop ?? 0, partId ?? activePartId, sectionId);
     scrollToSection(sectionId);
   };
 
@@ -121,6 +210,13 @@ export const JsCourseCollectionsView: FC<JsCourseCollectionsViewProps> = ({
     if (currentSectionId !== activeSectionId) {
       setActiveSectionId(currentSectionId);
     }
+
+    saveScrollState(scrollContainer.scrollTop, currentPartId, currentSectionId);
+  };
+
+  const onCourseCollectionCardClick = (collection: Collection) => {
+    saveCurrentScrollState();
+    onCollectionCardClick(collection);
   };
 
   return (
@@ -157,7 +253,7 @@ export const JsCourseCollectionsView: FC<JsCourseCollectionsViewProps> = ({
           </div>
         </aside>
 
-        <div className={styles.content} data-js-course-content onScroll={onContentScroll}>
+        <div ref={contentRef} className={styles.content} data-js-course-content onScroll={onContentScroll}>
           {jsCourseParts.map((part) => (
             <section key={part.id} id={part.id} className={styles.part}>
               <header className={styles.partHeader}>
@@ -173,7 +269,7 @@ export const JsCourseCollectionsView: FC<JsCourseCollectionsViewProps> = ({
                       <CollectionCard
                         key={lesson.collection_id}
                         collection={lesson}
-                        onCollectionCardClick={onCollectionCardClick}
+                        onCollectionCardClick={onCourseCollectionCardClick}
                       />
                     ))}
                   </div>
