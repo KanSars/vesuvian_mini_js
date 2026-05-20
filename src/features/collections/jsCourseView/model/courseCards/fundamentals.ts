@@ -1,5 +1,7 @@
 import { Card } from 'entities/Card/model/types';
 
+// Covers the visible "Основы JavaScript" section from courseStructure.ts.
+// Keys are collection_id values for lessons in that section.
 export const fundamentalsCards: Record<string, Card[]> = {
   'js-hello-world': [
     {

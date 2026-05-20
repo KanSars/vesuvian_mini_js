@@ -1,5 +1,7 @@
 import { Card } from 'entities/Card/model/types';
 
+// Covers only the visible "Документ" section under
+// "Браузер: документ, события, интерфейсы".
 interface LessonCardSource {
   id: string;
   name: string;
