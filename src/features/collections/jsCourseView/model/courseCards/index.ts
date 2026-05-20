@@ -18,6 +18,14 @@ import { browserEventDetailsCards } from './browserEventDetails';
 import { browserFormsControlsCards } from './browserFormsControls';
 import { browserLoadingCards } from './browserLoading';
 import { browserMiscCards } from './browserMisc';
+import { framesAndWindowsCards } from './framesAndWindows';
+import { binaryCards } from './binary';
+import { networkCards } from './network';
+import { dataStorageCards } from './dataStorage';
+import { animationCards } from './animation';
+import { webComponentsCards } from './webComponents';
+import { regularExpressionsCards } from './regularExpressions';
+import { cssForJsCards } from './cssForJs';
 
 // Imports below intentionally mirror the visible sidebar sections from
 // courseStructure.ts. Each exported Record is still keyed by lesson
@@ -42,4 +50,12 @@ export const courseCards: Record<string, Card[]> = {
   ...browserFormsControlsCards,
   ...browserLoadingCards,
   ...browserMiscCards,
+  ...framesAndWindowsCards,
+  ...binaryCards,
+  ...networkCards,
+  ...dataStorageCards,
+  ...animationCards,
+  ...webComponentsCards,
+  ...regularExpressionsCards,
+  ...cssForJsCards,
 };
