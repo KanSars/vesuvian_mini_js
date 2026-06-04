@@ -1,7 +1,6 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Navigate, Routes, Route } from 'react-router-dom';
 import { Header } from 'widgets/Header';
 import { Footer } from 'widgets/Footer';
-import { MainPage } from 'pages/MainPage';
 import { CollectionsPage } from 'pages/CollectionsPage';
 import { Item2Page } from 'pages/Item2Page';
 import { AboutPage } from 'pages/AboutPage';
@@ -17,7 +16,7 @@ export const App = () => {
           {/* <SideBar /> */}
           <main className={styles.main}>
             <Routes>
-              <Route path="/" element={<MainPage />} />
+              <Route path="/" element={<Navigate to="/collections" replace />} />
               <Route path="/collections" element={<CollectionsPage />} />
               <Route path="/training/:id" element={<TrainingPage />} />
               <Route path="/about" element={<AboutPage />} />
