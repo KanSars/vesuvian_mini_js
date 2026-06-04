@@ -56,7 +56,14 @@ const lessonCardSources: LessonCardSource[] = [
   {
     "id": "js-promisify",
     "name": "Промисификация",
-    "terms": []
+    "terms": [
+      "Промисификация",
+      "loadScriptPromise",
+      "promisify(f)",
+      "Колбэк err/result",
+      "Много аргументов колбэка",
+      "Ограничение: один результат промиса"
+    ]
   },
   {
     "id": "js-microtask-queue",

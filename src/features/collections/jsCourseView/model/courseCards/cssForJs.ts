@@ -89,7 +89,15 @@ const lessonCardSources: LessonCardSource[] = [
   {
     "id": "outline",
     "name": "Свойство outline",
-    "terms": []
+    "terms": [
+      "outline",
+      "outline и border",
+      "Не участвует в блочной модели",
+      "Нет outline-top/left",
+      "Перекрытие outline",
+      "outline-offset",
+      "Использование для hover"
+    ]
   },
   {
     "id": "box-sizing",

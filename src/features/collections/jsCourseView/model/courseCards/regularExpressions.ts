@@ -51,7 +51,14 @@ const lessonCardSources: LessonCardSource[] = [
   {
     "id": "regexp-boundary",
     "name": "Граница слова: \\b",
-    "terms": []
+    "terms": [
+      "Граница слова \\b",
+      "Позиции границы слова",
+      "\\bJava\\b",
+      "Отдельно стоящие числа",
+      "Ограничение \\w для латиницы",
+      "Задача: найти время"
+    ]
   },
   {
     "id": "regexp-escaping",
@@ -146,7 +153,15 @@ const lessonCardSources: LessonCardSource[] = [
   {
     "id": "regexp-sticky",
     "name": "Поиск на заданной позиции, флаг \"y\"",
-    "terms": []
+    "terms": [
+      "Флаг y",
+      "regexp.lastIndex",
+      "regexp.exec(str)",
+      "Флаг g и поиск дальше",
+      "Поиск ровно на lastIndex",
+      "Лексический разбор",
+      "Производительность флага y"
+    ]
   },
   {
     "id": "regexp-methods",

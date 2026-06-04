@@ -74,9 +74,11 @@ export const jsCourseParts: JsCoursePart[] = [
         id: 'code-quality',
         title: 'Качество кода',
         lessons: [
-          createLesson('js-debugging', 'Отладка в браузере', 'https://learn.javascript.ru/debugging-chrome', 'Качество'),
-          createLesson('js-coding-style', 'Советы по стилю кода', 'https://learn.javascript.ru/coding-style', 'Качество'),
-          createLesson('js-comments', 'Комментарии', 'https://learn.javascript.ru/comments', 'Качество'),
+          // Не удалять: это заготовки уроков из структуры learn.javascript.ru;
+          // временно скрыты из релиза, потому что карточки для них ещё не подготовлены.
+          // createLesson('js-debugging', 'Отладка в браузере', 'https://learn.javascript.ru/debugging-chrome', 'Качество'),
+          // createLesson('js-coding-style', 'Советы по стилю кода', 'https://learn.javascript.ru/coding-style', 'Качество'),
+          // createLesson('js-comments', 'Комментарии', 'https://learn.javascript.ru/comments', 'Качество'),
           createLesson('js-testing', 'Автоматическое тестирование c Mocha', 'https://learn.javascript.ru/testing-mocha', 'Качество'),
         ],
       },

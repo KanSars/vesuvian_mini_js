@@ -28,12 +28,29 @@ const lessonCardSources: LessonCardSource[] = [
   {
     "id": "fetch-progress",
     "name": "Fetch: ход загрузки",
-    "terms": []
+    "terms": [
+      "response.body",
+      "ReadableStream",
+      "reader.read()",
+      "done и value",
+      "Content-Length",
+      "Сборка chunks",
+      "TextDecoder",
+      "Blob из chunks",
+      "Ограничение: только получение данных"
+    ]
   },
   {
     "id": "fetch-abort",
     "name": "Fetch: прерывание запроса",
-    "terms": []
+    "terms": [
+      "AbortController",
+      "controller.signal",
+      "controller.abort()",
+      "AbortError",
+      "Отмена нескольких fetch",
+      "Отмена собственных асинхронных задач"
+    ]
   },
   {
     "id": "fetch-crossorigin",

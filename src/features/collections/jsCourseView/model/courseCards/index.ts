@@ -1,6 +1,7 @@
 import { Card } from 'entities/Card/model/types';
 import { introCards } from './intro';
 import { fundamentalsCards } from './fundamentals';
+import { codeQualityCards } from './codeQuality';
 import { objectsBasicsCards } from './objectsBasics';
 import { dataTypesCards } from './dataTypes';
 import { advancedFunctionsCards } from './advancedFunctions';
@@ -33,6 +34,7 @@ import { cssForJsCards } from './cssForJs';
 export const courseCards: Record<string, Card[]> = {
   ...introCards,
   ...fundamentalsCards,
+  ...codeQualityCards,
   ...objectsBasicsCards,
   ...dataTypesCards,
   ...advancedFunctionsCards,
