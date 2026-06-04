@@ -23,4 +23,27 @@
   p {
     margin: 0 0 14px;
   }
+
+  a {
+    color: $primary-green;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+
+    &:hover {
+      color: $white;
+    }
+  }
+}
+
+.sources {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid rgba($silver, 0.2);
+
+  h2 {
+    margin: 0 0 16px;
+    color: $white;
+    font-size: 24px;
+    line-height: 1.2;
+  }
 }
