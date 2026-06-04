@@ -1,4 +1,5 @@
 import { LessonCardSource, createSectionCards } from './createSectionCards';
+import { languageDefinitions } from './sourceDefinitions';
 
 const codeByLessonAndTerm: Record<string, string> = {
   "js-array::Объявление": "const arr = [item1, item2, item3];",
@@ -55,6 +56,7 @@ const defineByKeyword: Array<[RegExp, (lessonName: string, term: string) => stri
 export const createLanguageSectionCards = (lessonCardSources: LessonCardSource[]) => createSectionCards(
   lessonCardSources,
   {
+    definitionByLessonAndTerm: languageDefinitions,
     codeByLessonAndTerm,
     hintByKeyword,
     defineByKeyword,

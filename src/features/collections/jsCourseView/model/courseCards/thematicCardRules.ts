@@ -1,4 +1,5 @@
 import { LessonCardSource, createSectionCards } from './createSectionCards';
+import { thematicDefinitions } from './sourceDefinitions';
 
 const codeByLessonAndTerm: Record<string, string> = {
   "popup-windows::Полный синтаксис window.open": "window.open(url, name, params);",
@@ -59,6 +60,7 @@ const defineByKeyword: Array<[RegExp, (lessonName: string, term: string) => stri
 export const createThematicSectionCards = (lessonCardSources: LessonCardSource[]) => createSectionCards(
   lessonCardSources,
   {
+    definitionByLessonAndTerm: thematicDefinitions,
     codeByLessonAndTerm,
     hintByKeyword,
     defineByKeyword,

@@ -1,4 +1,5 @@
 import { LessonCardSource, createSectionCards } from './createSectionCards';
+import { browserInterfaceDefinitions } from './sourceDefinitions';
 
 const codeByLessonAndTerm: Record<string, string> = {
   "introduction-browser-events::Обработчики событий": "element.onclick = function(event) {\n  // обработчик\n};",
@@ -61,6 +62,7 @@ const defineByKeyword: Array<[RegExp, (lessonName: string, term: string) => stri
 export const createBrowserInterfaceSectionCards = (lessonCardSources: LessonCardSource[]) => createSectionCards(
   lessonCardSources,
   {
+    definitionByLessonAndTerm: browserInterfaceDefinitions,
     codeByLessonAndTerm,
     hintByTerm,
     defineByKeyword,

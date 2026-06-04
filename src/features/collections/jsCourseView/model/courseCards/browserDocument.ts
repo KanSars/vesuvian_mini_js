@@ -1,4 +1,5 @@
 import { Card } from 'entities/Card/model/types';
+import { browserDocumentDefinitions } from './sourceDefinitions';
 
 // Covers only the visible "Документ" section under
 // "Браузер: документ, события, интерфейсы".
@@ -243,6 +244,11 @@ const defineByKeyword: Array<[RegExp, (lessonName: string, term: string) => stri
 ];
 
 const makeDefinition = (lessonName: string, term: string): string => {
+  const exactDefinition = browserDocumentDefinitions[lessonNameToId[lessonName] + '::' + term];
+  if (exactDefinition) {
+    return exactDefinition;
+  }
+
   const found = defineByKeyword.find(([pattern]) => pattern.test(term) || pattern.test(lessonName));
   if (found) {
     return found[1](lessonName, term);
@@ -250,6 +256,10 @@ const makeDefinition = (lessonName: string, term: string): string => {
 
   return 'Раздел урока «' + lessonName + '» объясняет тему «' + term + '» и её роль при работе со страницей в браузере.';
 };
+
+const lessonNameToId = Object.fromEntries(
+  lessonCardSources.map((lesson) => [lesson.name, lesson.id])
+);
 
 const makeCardId = (lessonId: string, index: number): string => lessonId + '-card-' + String(index + 1).padStart(2, '0');
 
