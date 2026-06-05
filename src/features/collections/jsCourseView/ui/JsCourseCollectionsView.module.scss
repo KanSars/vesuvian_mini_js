@@ -9,16 +9,31 @@
   min-width: 0;
 }
 
-.topNav {
+.navLane {
+  position: relative;
+  min-width: 0;
+}
+
+.topNavLane {
   position: sticky;
   top: 0;
   z-index: 5;
+  width: 100vw;
+  margin-left: calc((100% - 100vw) / 2);
+}
+
+.sideNavLane {
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+}
+
+.topNav {
   display: flex;
   gap: 8px;
   align-items: center;
-  width: 100vw;
-  margin: 0 0 0;
-  margin-left: calc((100% - 100vw) / 2);
+  width: 100%;
+  margin: 0;
   padding: 4px 42px;
   overflow-x: auto;
   overflow-y: hidden;
@@ -43,6 +58,10 @@
     border: 0;
     border-radius: 999px;
   }
+}
+
+.navScrollButton {
+  display: none;
 }
 
 .partButton,
@@ -93,6 +112,7 @@
   display: flex;
   flex-direction: column;
   gap: 18px;
+  width: 100%;
   height: 100%;
   padding-right: 12px;
   overflow: auto;
@@ -220,10 +240,14 @@
     grid-template-columns: none;
   }
 
-  .sideNav {
+  .sideNavLane {
     width: 100vw;
+    height: auto;
     margin-left: calc((100% - 100vw) / 2);
     flex: 0 0 auto;
+  }
+
+  .sideNav {
     flex-direction: row;
     gap: 10px;
     height: auto;
@@ -416,5 +440,116 @@
 
   .sectionTitle {
     font-size: 18px;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .navScrollButton {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: 8;
+    display: flex;
+    align-items: center;
+    width: 44px;
+    height: auto;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: transparent;
+    cursor: pointer;
+    font: inherit;
+    font-size: 0;
+    line-height: 0;
+    opacity: 0.86;
+    overflow: visible;
+    transition: opacity 0.2s;
+
+    &::after {
+      content: "";
+      pointer-events: none;
+      position: absolute;
+      top: 50%;
+      width: 9px;
+      height: 9px;
+      border-top: 2px solid $primary-green;
+      border-right: 2px solid $primary-green;
+      opacity: 0.9;
+    }
+
+    &:hover:not(:disabled),
+    &:focus-visible:not(:disabled) {
+      opacity: 1;
+    }
+
+    &:disabled {
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
+
+  .navScrollButtonPrev {
+    left: 0;
+    justify-content: flex-start;
+    background: linear-gradient(90deg, rgba($gradient-start, 0.98) 0%, rgba($gradient-start, 0.86) 54%, transparent 100%);
+
+    &::after {
+      left: 16px;
+      transform: translateY(-50%) rotate(-135deg);
+    }
+  }
+
+  .navScrollButtonNext {
+    right: 0;
+    justify-content: flex-end;
+    background: linear-gradient(270deg, rgba($gradient-start, 0.98) 0%, rgba($gradient-start, 0.86) 54%, transparent 100%);
+
+    &::after {
+      right: 16px;
+      transform: translateY(-50%) rotate(45deg);
+    }
+  }
+
+  .topNav {
+    padding-left: 48px;
+    padding-right: 48px;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) and (max-width: 900px) {
+  .sideNav {
+    padding-left: 44px;
+    padding-right: 44px;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) and (min-width: 641px) {
+  .navScrollButton {
+    width: 56px;
+  }
+
+  .navScrollButtonPrev {
+    &::after {
+      left: 23px;
+    }
+  }
+
+  .navScrollButtonNext {
+    &::after {
+      right: 23px;
+    }
+  }
+
+  .topNav {
+    padding-left: 64px;
+    padding-right: 64px;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) and (min-width: 641px) and (max-width: 900px) {
+  .sideNav {
+    padding-left: 60px;
+    padding-right: 60px;
   }
 }

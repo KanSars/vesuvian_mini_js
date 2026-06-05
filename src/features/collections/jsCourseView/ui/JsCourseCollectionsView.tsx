@@ -1,4 +1,4 @@
-import { FC, UIEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { FC, UIEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Collection } from 'entities/Collection/model/types';
 import { CollectionCard } from 'entities/Collection/ui/CollectionCard/CollectionCard';
 import { jsCourseParts } from '../model/courseStructure';
@@ -12,6 +12,24 @@ interface JsCourseScrollState {
   activePartId: string;
   activeSectionId: string;
 }
+
+type CourseNavLane = 'parts' | 'sections';
+
+interface CourseNavScrollState {
+  canScrollBack: boolean;
+  canScrollForward: boolean;
+}
+
+const initialNavScrollState: Record<CourseNavLane, CourseNavScrollState> = {
+  parts: {
+    canScrollBack: false,
+    canScrollForward: false,
+  },
+  sections: {
+    canScrollBack: false,
+    canScrollForward: false,
+  },
+};
 
 const getSessionStorage = () => {
   if (typeof window === 'undefined') {
@@ -66,6 +84,9 @@ export const JsCourseCollectionsView: FC<JsCourseCollectionsViewProps> = ({
   const initialScrollState = getSavedScrollState();
   const [activePartId, setActivePartId] = useState(initialScrollState?.activePartId ?? initialPartId);
   const [activeSectionId, setActiveSectionId] = useState(initialScrollState?.activeSectionId ?? initialSectionId);
+  const [navScrollState, setNavScrollState] = useState(initialNavScrollState);
+  const topNavRef = useRef<HTMLElement | null>(null);
+  const sideNavRef = useRef<HTMLElement | null>(null);
   const contentRef = useRef<HTMLDivElement | null>(null);
   const programmaticScrollTimeoutRef = useRef<number | undefined>(undefined);
 
@@ -84,6 +105,45 @@ export const JsCourseCollectionsView: FC<JsCourseCollectionsViewProps> = ({
     return result;
   }, []);
 
+  const getNavElement = useCallback((lane: CourseNavLane) => (
+    lane === 'parts' ? topNavRef.current : sideNavRef.current
+  ), []);
+
+  const updateNavScrollState = useCallback((lane: CourseNavLane) => {
+    const navElement = getNavElement(lane);
+
+    if (!navElement) {
+      return;
+    }
+
+    const maxScrollLeft = navElement.scrollWidth - navElement.clientWidth;
+    const nextLaneState = {
+      canScrollBack: navElement.scrollLeft > 1,
+      canScrollForward: navElement.scrollLeft < maxScrollLeft - 1,
+    };
+
+    setNavScrollState((currentState) => {
+      const currentLaneState = currentState[lane];
+
+      if (
+        currentLaneState.canScrollBack === nextLaneState.canScrollBack &&
+        currentLaneState.canScrollForward === nextLaneState.canScrollForward
+      ) {
+        return currentState;
+      }
+
+      return {
+        ...currentState,
+        [lane]: nextLaneState,
+      };
+    });
+  }, [getNavElement]);
+
+  const updateAllNavScrollState = useCallback(() => {
+    updateNavScrollState('parts');
+    updateNavScrollState('sections');
+  }, [updateNavScrollState]);
+
   useEffect(() => {
     if (!initialScrollState || !contentRef.current) {
       return;
@@ -97,6 +157,32 @@ export const JsCourseCollectionsView: FC<JsCourseCollectionsViewProps> = ({
 
     return () => window.cancelAnimationFrame(animationFrameId);
   }, []);
+
+  useEffect(() => {
+    const animationFrameId = window.requestAnimationFrame(updateAllNavScrollState);
+
+    window.addEventListener('resize', updateAllNavScrollState);
+
+    const resizeObserver = typeof ResizeObserver !== 'undefined'
+      ? new ResizeObserver(updateAllNavScrollState)
+      : null;
+
+    if (resizeObserver) {
+      if (topNavRef.current) {
+        resizeObserver.observe(topNavRef.current);
+      }
+
+      if (sideNavRef.current) {
+        resizeObserver.observe(sideNavRef.current);
+      }
+    }
+
+    return () => {
+      window.cancelAnimationFrame(animationFrameId);
+      window.removeEventListener('resize', updateAllNavScrollState);
+      resizeObserver?.disconnect();
+    };
+  }, [activePartId, updateAllNavScrollState]);
 
   const saveScrollState = (
     scrollTop: number,
@@ -219,39 +305,111 @@ export const JsCourseCollectionsView: FC<JsCourseCollectionsViewProps> = ({
     onCollectionCardClick(collection);
   };
 
+  const scrollNavLane = (lane: CourseNavLane, direction: -1 | 1) => {
+    const navElement = getNavElement(lane);
+
+    if (!navElement) {
+      return;
+    }
+
+    navElement.scrollBy({
+      left: direction * Math.max(140, Math.round(navElement.clientWidth * 0.72)),
+      behavior: 'smooth',
+    });
+
+    window.setTimeout(() => updateNavScrollState(lane), 350);
+  };
+
+  const getScrollButtonDisabled = (lane: CourseNavLane, direction: -1 | 1) => (
+    direction === -1
+      ? !navScrollState[lane].canScrollBack
+      : !navScrollState[lane].canScrollForward
+  );
+
   return (
     <div className={styles.courseView}>
-      <nav className={styles.topNav} aria-label="Основные разделы курса">
-        {jsCourseParts.map((part) => (
-          <button
-            key={part.id}
-            type="button"
-            className={`${styles.partButton} ${part.id === activePartId ? styles.partButtonActive : ''}`}
-            aria-current={part.id === activePartId ? 'true' : undefined}
-            onClick={() => onPartButtonClick(part.id)}
-          >
-            {part.title}
-          </button>
-        ))}
-      </nav>
+      <div className={`${styles.navLane} ${styles.topNavLane}`}>
+        <button
+          type="button"
+          className={`${styles.navScrollButton} ${styles.navScrollButtonPrev}`}
+          aria-label="Прокрутить основные разделы влево"
+          disabled={getScrollButtonDisabled('parts', -1)}
+          onClick={() => scrollNavLane('parts', -1)}
+        >
+          {'‹'}
+        </button>
+        <nav
+          ref={topNavRef}
+          className={styles.topNav}
+          aria-label="Основные разделы курса"
+          onScroll={() => updateNavScrollState('parts')}
+        >
+          {jsCourseParts.map((part) => (
+            <button
+              key={part.id}
+              type="button"
+              className={`${styles.partButton} ${part.id === activePartId ? styles.partButtonActive : ''}`}
+              aria-current={part.id === activePartId ? 'true' : undefined}
+              onClick={() => onPartButtonClick(part.id)}
+            >
+              {part.title}
+            </button>
+          ))}
+        </nav>
+        <button
+          type="button"
+          className={`${styles.navScrollButton} ${styles.navScrollButtonNext}`}
+          aria-label="Прокрутить основные разделы вправо"
+          disabled={getScrollButtonDisabled('parts', 1)}
+          onClick={() => scrollNavLane('parts', 1)}
+        >
+          {'›'}
+        </button>
+      </div>
 
       <div className={styles.layout}>
-        <aside className={styles.sideNav} aria-label="Разделы курса" data-js-course-side-nav>
-          <div className={styles.sideNavGroup}>
-            <span className={styles.sideNavTitle}>{activePart.title}</span>
-            {activePart.sections.map((section) => (
-              <button
-                key={section.id}
-                type="button"
-                className={`${styles.sectionButton} ${section.id === activeSectionId ? styles.sectionButtonActive : ''}`}
-                aria-current={section.id === activeSectionId ? 'true' : undefined}
-                onClick={() => onSectionButtonClick(section.id)}
-              >
-                {section.title}
-              </button>
-            ))}
-          </div>
-        </aside>
+        <div className={`${styles.navLane} ${styles.sideNavLane}`}>
+          <button
+            type="button"
+            className={`${styles.navScrollButton} ${styles.navScrollButtonPrev}`}
+            aria-label="Прокрутить разделы курса влево"
+            disabled={getScrollButtonDisabled('sections', -1)}
+            onClick={() => scrollNavLane('sections', -1)}
+          >
+            {'‹'}
+          </button>
+          <aside
+            ref={sideNavRef}
+            className={styles.sideNav}
+            aria-label="Разделы курса"
+            data-js-course-side-nav
+            onScroll={() => updateNavScrollState('sections')}
+          >
+            <div className={styles.sideNavGroup}>
+              <span className={styles.sideNavTitle}>{activePart.title}</span>
+              {activePart.sections.map((section) => (
+                <button
+                  key={section.id}
+                  type="button"
+                  className={`${styles.sectionButton} ${section.id === activeSectionId ? styles.sectionButtonActive : ''}`}
+                  aria-current={section.id === activeSectionId ? 'true' : undefined}
+                  onClick={() => onSectionButtonClick(section.id)}
+                >
+                  {section.title}
+                </button>
+              ))}
+            </div>
+          </aside>
+          <button
+            type="button"
+            className={`${styles.navScrollButton} ${styles.navScrollButtonNext}`}
+            aria-label="Прокрутить разделы курса вправо"
+            disabled={getScrollButtonDisabled('sections', 1)}
+            onClick={() => scrollNavLane('sections', 1)}
+          >
+            {'›'}
+          </button>
+        </div>
 
         <div ref={contentRef} className={styles.content} data-js-course-content onScroll={onContentScroll}>
           {jsCourseParts.map((part) => (
