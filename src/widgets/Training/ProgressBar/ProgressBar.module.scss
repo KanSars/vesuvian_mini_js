@@ -3,13 +3,16 @@
 .container {
   width: 100%;
   margin-bottom: 20px;
+  min-width: 0;
 }
 
 .info {
   display: flex;
   justify-content: space-between;
+  gap: 12px;
   margin-bottom: 5px;
   color: $silver;
+  overflow-wrap: anywhere;
 }
 
 .track {
@@ -24,4 +27,14 @@
   height: 100%;
   background-color: $primary-green;
   transition: width 0.3s ease-in-out;
+}
+
+@media (max-width: 640px) {
+  .container {
+    margin-bottom: 12px;
+  }
+
+  .info {
+    font-size: 13px;
+  }
 }

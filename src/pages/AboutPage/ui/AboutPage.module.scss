@@ -5,13 +5,15 @@
   justify-content: center;
   width: 100%;
   padding: 40px 20px;
-  box-sizing: border-box;
+  min-width: 0;
 }
 
 .content {
   max-width: 760px;
+  min-width: 0;
   color: $silver;
   line-height: 1.6;
+  overflow-wrap: anywhere;
 
   h1 {
     margin: 0 0 18px;
@@ -28,9 +30,45 @@
     color: $primary-green;
     text-decoration: underline;
     text-underline-offset: 3px;
+    overflow-wrap: anywhere;
 
     &:hover {
       color: $white;
+    }
+  }
+}
+
+@media (max-width: 640px) {
+  .aboutPage {
+    padding: 28px 0;
+  }
+
+  .content {
+    line-height: 1.55;
+
+    h1 {
+      font-size: 28px;
+    }
+  }
+
+  .sources {
+    margin-top: 24px;
+    padding-top: 20px;
+
+    h2 {
+      font-size: 21px;
+    }
+  }
+}
+
+@media (max-width: 380px) {
+  .aboutPage {
+    padding: 22px 0;
+  }
+
+  .content {
+    h1 {
+      font-size: 26px;
     }
   }
 }

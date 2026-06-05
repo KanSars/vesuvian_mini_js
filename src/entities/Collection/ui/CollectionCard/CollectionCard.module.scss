@@ -1,8 +1,10 @@
 @use "shared/styles/color.scss" as *;
 
 .collectionCard {
-  width: 300px;
-  height: 180px;
+  width: 100%;
+  max-width: 300px;
+  min-height: 180px;
+  aspect-ratio: 5 / 3;
   border-radius: 10px;
   background-color: $primary-green;
   display: flex;
@@ -15,9 +17,9 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s;
   color: #000;
-  box-sizing: border-box;
   border: 0;
   font: inherit;
+  overflow: hidden;
 
   &:hover {
     transform: scale(1.02);
@@ -28,6 +30,7 @@
   font-size: 20px;
   font-weight: bold;
   text-align: center;
+  overflow-wrap: anywhere;
 }
 
 .tagsWrapper {
@@ -37,4 +40,28 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
+  max-width: calc(100% - 20px);
+}
+
+@media (max-width: 640px) {
+  .collectionCard {
+    max-width: none;
+    min-height: 154px;
+    padding: 14px;
+  }
+
+  .title {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 380px) {
+  .collectionCard {
+    min-height: 142px;
+    padding: 12px;
+  }
+
+  .title {
+    font-size: 17px;
+  }
 }

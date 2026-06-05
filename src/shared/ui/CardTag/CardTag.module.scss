@@ -7,4 +7,12 @@
   font-size: 12px;
   margin: 2px;
   color: #000;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 380px) {
+  .cardTag {
+    padding: 2px 6px;
+    font-size: 11px;
+  }
 }

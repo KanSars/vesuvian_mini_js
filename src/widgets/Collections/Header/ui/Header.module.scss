@@ -7,22 +7,30 @@
   margin-bottom: 30px;
   padding: 10px 0;
   border-bottom: 1px solid #eee;
+  gap: 20px;
+  min-width: 0;
 }
 
 .title {
   font-size: 32px;
   font-weight: bold;
   color: $white;
+  margin: 0;
+  overflow-wrap: anywhere;
 }
 
 .controls {
   display: flex;
+  flex-wrap: wrap;
   gap: 20px;
+  justify-content: flex-end;
+  min-width: 0;
 }
 
 .controlGroup {
   display: flex;
   align-items: center;
+  min-width: 0;
 }
 
 .label {
@@ -37,4 +45,50 @@
   border: 1px solid $silver;
   background: $dark-green;
   color: $white;
+  max-width: 100%;
+}
+
+@media (max-width: 640px) {
+  .header {
+    align-items: flex-start;
+    flex-direction: column;
+    margin-bottom: 18px;
+    gap: 12px;
+  }
+
+  .title {
+    font-size: 26px;
+  }
+
+  .controls {
+    width: 100%;
+    gap: 10px;
+    justify-content: flex-start;
+  }
+
+  .controlGroup {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1 1 150px;
+  }
+
+  .label {
+    margin-right: 0;
+  }
+
+  .select {
+    min-height: 36px;
+    width: 100%;
+  }
+}
+
+@media (max-width: 380px) {
+  .title {
+    font-size: 24px;
+  }
+
+  .controlGroup {
+    flex-basis: 100%;
+  }
 }
