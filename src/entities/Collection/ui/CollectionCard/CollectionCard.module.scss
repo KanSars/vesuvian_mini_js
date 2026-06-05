@@ -45,23 +45,25 @@
 
 @media (max-width: 640px) {
   .collectionCard {
+    aspect-ratio: 2 / 1;
     max-width: none;
-    min-height: 154px;
-    padding: 14px;
-  }
-
-  .title {
-    font-size: 18px;
-  }
-}
-
-@media (max-width: 380px) {
-  .collectionCard {
-    min-height: 142px;
+    min-height: 140px;
     padding: 12px;
   }
 
   .title {
     font-size: 17px;
+  }
+}
+
+@media (max-width: 380px) {
+  .collectionCard {
+    aspect-ratio: 2.15 / 1;
+    min-height: 130px;
+    padding: 10px;
+  }
+
+  .title {
+    font-size: 16px;
   }
 }
