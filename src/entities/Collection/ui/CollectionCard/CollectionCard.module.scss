@@ -3,7 +3,6 @@
 .collectionCard {
   width: 100%;
   max-width: 300px;
-  min-height: 180px;
   aspect-ratio: 5 / 3;
   border-radius: 10px;
   background-color: $primary-green;
@@ -45,9 +44,7 @@
 
 @media (max-width: 640px) {
   .collectionCard {
-    aspect-ratio: 2 / 1;
-    max-width: none;
-    min-height: 140px;
+    max-width: 300px;
     padding: 12px;
   }
 
@@ -58,8 +55,6 @@
 
 @media (max-width: 380px) {
   .collectionCard {
-    aspect-ratio: 2.15 / 1;
-    min-height: 130px;
     padding: 10px;
   }
 
