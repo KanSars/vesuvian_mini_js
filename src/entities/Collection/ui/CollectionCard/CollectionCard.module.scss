@@ -19,10 +19,6 @@
   border: 0;
   font: inherit;
   overflow: hidden;
-
-  &:hover {
-    transform: scale(1.02);
-  }
 }
 
 .title {
@@ -40,6 +36,12 @@
   flex-wrap: wrap;
   justify-content: flex-end;
   max-width: calc(100% - 20px);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .collectionCard:hover {
+    transform: scale(1.02);
+  }
 }
 
 @media (max-width: 640px) {
