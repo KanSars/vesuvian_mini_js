@@ -1,4 +1,4 @@
-import { FC, TransitionEvent, useState, useEffect } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Card } from 'entities/Card/model/types';
 import { FlashCard } from 'entities/Card/ui/FlashCard/FlashCard';
 import styles from './TrainingCarousel.module.scss';
@@ -9,15 +9,42 @@ interface TrainingCarouselProps {
   onProgressUpdate: (current: number) => void;
 }
 
+type SlotId = 0 | 1 | 2;
+type SlotRole = 'previous' | 'current' | 'next';
+type MotionDirection = 'forward' | 'backward';
+
+interface CarouselSlot {
+  id: SlotId;
+  role: SlotRole;
+  motion?: MotionDirection;
+}
+
+const INITIAL_SLOTS: CarouselSlot[] = [
+  { id: 0, role: 'previous' },
+  { id: 1, role: 'current' },
+  { id: 2, role: 'next' },
+];
+
+const getCardIndex = (role: SlotRole, currentIndex: number) => {
+  if (role === 'previous') {
+    return currentIndex - 1;
+  }
+
+  if (role === 'next') {
+    return currentIndex + 1;
+  }
+
+  return currentIndex;
+};
+
 export const TrainingCarousel: FC<TrainingCarouselProps> = ({ cards, onComplete, onProgressUpdate }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isFlipped, setIsFlipped] = useState(false);
-  const [pendingIndex, setPendingIndex] = useState<number | null>(null);
-  
-  // Состояния для анимации (как в прототипе)
-  const [firstCardClass, setFirstCardClass] = useState(styles.previous);
-  const [secondCardClass, setSecondCardClass] = useState(styles.current);
-  const [thirdCardClass, setThirdCardClass] = useState(styles.next);
+  const [slots, setSlots] = useState<CarouselSlot[]>(INITIAL_SLOTS);
+  const [flippedSlots, setFlippedSlots] = useState<Record<SlotId, boolean>>({
+    0: false,
+    1: false,
+    2: false,
+  });
 
   useEffect(() => {
     if (cards.length > 0) {
@@ -28,8 +55,8 @@ export const TrainingCarousel: FC<TrainingCarouselProps> = ({ cards, onComplete,
   useEffect(() => {
     if (currentIndex >= cards.length) {
       setCurrentIndex(Math.max(cards.length - 1, 0));
-      setIsFlipped(false);
-      setPendingIndex(null);
+      setSlots(INITIAL_SLOTS);
+      setFlippedSlots({ 0: false, 1: false, 2: false });
     }
   }, [cards.length, currentIndex]);
 
@@ -41,39 +68,37 @@ export const TrainingCarousel: FC<TrainingCarouselProps> = ({ cards, onComplete,
     );
   }
 
-  const handleFlip = () => {
-    if (pendingIndex === null) {
-      setIsFlipped((current) => !current);
-    }
-  };
-
-  const switchToCard = (targetIndex: number) => {
-    if (isFlipped) {
-      setPendingIndex(targetIndex);
-      setIsFlipped(false);
-      return;
-    }
-
-    setCurrentIndex(targetIndex);
-  };
-
-  const handleFlipEnd = (event: TransitionEvent<HTMLDivElement>) => {
-    if (pendingIndex === null || event.propertyName !== 'transform') {
-      return;
-    }
-
-    setCurrentIndex(pendingIndex);
-    setPendingIndex(null);
+  const handleFlip = (slotId: SlotId) => {
+    setFlippedSlots((current) => ({
+      ...current,
+      [slotId]: !current[slotId],
+    }));
   };
 
   const handleNext = () => {
     if (currentIndex < cards.length - 1) {
-      switchToCard(currentIndex + 1);
-      
-      // Логика сдвига классов (упрощенная версия прототипа для плавности)
-      setFirstCardClass(styles.previous);
-      setSecondCardClass(styles.current);
-      setThirdCardClass(styles.next);
+      const incomingSlot = slots.find((slot) => slot.role === 'next');
+
+      setSlots((currentSlots) => currentSlots.map((slot) => {
+        if (slot.role === 'previous') {
+          return { ...slot, role: 'next', motion: undefined };
+        }
+
+        if (slot.role === 'current') {
+          return { ...slot, role: 'previous', motion: 'forward' };
+        }
+
+        return { ...slot, role: 'current', motion: undefined };
+      }));
+
+      if (incomingSlot) {
+        setFlippedSlots((current) => ({
+          ...current,
+          [incomingSlot.id]: false,
+        }));
+      }
+
+      setCurrentIndex((current) => current + 1);
     } else {
       onComplete();
     }
@@ -81,60 +106,62 @@ export const TrainingCarousel: FC<TrainingCarouselProps> = ({ cards, onComplete,
 
   const handlePrev = () => {
     if (currentIndex > 0) {
-      switchToCard(currentIndex - 1);
+      const incomingSlot = slots.find((slot) => slot.role === 'previous');
+
+      setSlots((currentSlots) => currentSlots.map((slot) => {
+        if (slot.role === 'next') {
+          return { ...slot, role: 'previous', motion: undefined };
+        }
+
+        if (slot.role === 'current') {
+          return { ...slot, role: 'next', motion: 'backward' };
+        }
+
+        return { ...slot, role: 'current', motion: undefined };
+      }));
+
+      if (incomingSlot) {
+        setFlippedSlots((current) => ({
+          ...current,
+          [incomingSlot.id]: false,
+        }));
+      }
+
+      setCurrentIndex((current) => current - 1);
     }
   };
-
-  // Получаем данные для трех карточек
-  const prevCard = cards[currentIndex - 1];
-  const currentCard = cards[currentIndex];
-  const nextCard = cards[currentIndex + 1];
 
   return (
     <div className={styles.carouselContainer}>
       <div className={styles.cardsWrapper}>
-        {prevCard && (
-          <div className={firstCardClass}>
-            <FlashCard 
-              term={prevCard.term} 
-              definition={prevCard.definition} 
-              code={prevCard.code}
-              hint={prevCard.hint}
-              isFlipped={false}
-              onClick={() => {}}
-            />
-          </div>
-        )}
-        
-        <div className={secondCardClass} onTransitionEnd={handleFlipEnd}>
-          <FlashCard 
-            term={currentCard.term} 
-            definition={currentCard.definition} 
-            code={currentCard.code}
-            hint={currentCard.hint}
-            isFlipped={isFlipped}
-            onClick={handleFlip}
-          />
-        </div>
+        {slots.map((slot) => {
+          const card = cards[getCardIndex(slot.role, currentIndex)];
+          const className = [
+            styles[slot.role],
+            slot.motion ? styles[slot.motion] : '',
+          ].filter(Boolean).join(' ');
 
-        {nextCard && (
-          <div className={thirdCardClass}>
-            <FlashCard 
-              term={nextCard.term} 
-              definition={nextCard.definition} 
-              code={nextCard.code}
-              hint={nextCard.hint}
-              isFlipped={false}
-              onClick={() => {}}
-            />
-          </div>
-        )}
+          return (
+            <div key={slot.id} className={className}>
+              {card && (
+                <FlashCard
+                  term={card.term}
+                  definition={card.definition}
+                  code={card.code}
+                  hint={card.hint}
+                  isFlipped={flippedSlots[slot.id]}
+                  onClick={slot.role === 'current' ? () => handleFlip(slot.id) : () => {}}
+                />
+              )}
+            </div>
+          );
+        })}
       </div>
 
       <div className={styles.controls}>
         <button 
           onClick={handlePrev} 
-          disabled={currentIndex === 0 || pendingIndex !== null}
+          disabled={currentIndex === 0}
           className={styles.navButton}
         >
           Назад
@@ -142,7 +169,6 @@ export const TrainingCarousel: FC<TrainingCarouselProps> = ({ cards, onComplete,
         <span className={styles.counter}>{currentIndex + 1} / {cards.length}</span>
         <button 
           onClick={handleNext} 
-          disabled={pendingIndex !== null}
           className={styles.navButton}
         >
           {currentIndex === cards.length - 1 ? 'Завершить' : 'Вперед'}
