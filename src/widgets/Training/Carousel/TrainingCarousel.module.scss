@@ -48,8 +48,8 @@
 }
 
 .dragged {
-  transform: translateX(var(--drag-x)) rotate(var(--drag-rotation));
-  transition: transform 0.3s ease-out;
+  transform: translateX(var(--drag-x));
+  transition: transform 0.5s ease-in-out;
 }
 
 .dragging {

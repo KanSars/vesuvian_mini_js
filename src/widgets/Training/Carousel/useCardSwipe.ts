@@ -39,7 +39,6 @@ const SWIPE_DISTANCE_RATIO = 0.25;
 const FAST_SWIPE_DISTANCE = 30;
 const FAST_SWIPE_DURATION = 300;
 const GESTURE_AXIS_THRESHOLD = 8;
-const MAX_ROTATION = 8;
 const SUPPRESS_CLICK_DURATION = 400;
 
 export const useCardSwipe = ({
@@ -224,17 +223,9 @@ export const useCardSwipe = ({
     }
   };
 
-  const rotation = Math.max(
-    -MAX_ROTATION,
-    Math.min(
-      MAX_ROTATION,
-      (dragOffset / Math.max(touchGesture.current.cardWidth, 1)) * MAX_ROTATION,
-    ),
-  );
   const style = isActive
     ? {
       '--drag-x': `${dragOffset}px`,
-      '--drag-rotation': `${rotation}deg`,
     } as CSSProperties
     : undefined;
 
