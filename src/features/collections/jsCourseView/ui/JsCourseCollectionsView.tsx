@@ -282,10 +282,15 @@ export const JsCourseCollectionsView: FC<JsCourseCollectionsViewProps> = ({
     scrollTop: number,
     activationLine: number
   ) => {
-    if (
-      isLeavingCollectionsRef.current ||
-      programmaticScrollTimeoutRef.current !== undefined
-    ) {
+    if (isLeavingCollectionsRef.current) {
+      return;
+    }
+
+    if (programmaticScrollTimeoutRef.current !== undefined) {
+      window.clearTimeout(programmaticScrollTimeoutRef.current);
+      programmaticScrollTimeoutRef.current = window.setTimeout(() => {
+        programmaticScrollTimeoutRef.current = undefined;
+      }, 150);
       return;
     }
 

@@ -82,11 +82,9 @@
   white-space: nowrap;
   transition: background-color 0.2s, color 0.2s, transform 0.2s;
 
-  &:hover,
   &:focus-visible {
-    background: $primary-green;
-    color: $grey;
-    transform: translateY(-1px);
+    outline: 2px solid $primary-green;
+    outline-offset: 2px;
   }
 }
 
@@ -144,10 +142,9 @@
   color: $silver;
   line-height: 1.25;
 
-  &:hover,
   &:focus-visible {
-    background: rgba($primary-green, 0.1);
-    color: $white;
+    outline: 2px solid $primary-green;
+    outline-offset: 2px;
   }
 }
 
@@ -478,6 +475,21 @@
 }
 
 @media (hover: hover) and (pointer: fine) {
+  .partButton {
+    &:hover {
+      background: $primary-green;
+      color: $grey;
+      transform: translateY(-1px);
+    }
+  }
+
+  .sectionButton {
+    &:hover {
+      background: rgba($primary-green, 0.1);
+      color: $white;
+    }
+  }
+
   .navScrollButton {
     position: absolute;
     top: 0;
