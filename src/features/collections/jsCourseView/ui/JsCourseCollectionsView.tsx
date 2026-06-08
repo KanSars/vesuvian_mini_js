@@ -150,6 +150,38 @@ export const JsCourseCollectionsView: FC<JsCourseCollectionsViewProps> = ({
     updateNavScrollState('sections');
   }, [updateNavScrollState]);
 
+  const scrollActiveNavButtonIntoView = useCallback((lane: CourseNavLane) => {
+    const navElement = getNavElement(lane);
+    const activeButton = navElement?.querySelector<HTMLElement>('[aria-current="true"]');
+
+    if (!navElement || !activeButton) {
+      return;
+    }
+
+    const navRect = navElement.getBoundingClientRect();
+    const buttonRect = activeButton.getBoundingClientRect();
+
+    if (buttonRect.left < navRect.left) {
+      navElement.scrollBy({
+        left: buttonRect.left - navRect.left,
+        behavior: 'smooth',
+      });
+    } else if (buttonRect.right > navRect.right) {
+      navElement.scrollBy({
+        left: buttonRect.right - navRect.right,
+        behavior: 'smooth',
+      });
+    }
+  }, [getNavElement]);
+
+  useEffect(() => {
+    scrollActiveNavButtonIntoView('parts');
+  }, [activePartId, scrollActiveNavButtonIntoView]);
+
+  useEffect(() => {
+    scrollActiveNavButtonIntoView('sections');
+  }, [activePartId, activeSectionId, scrollActiveNavButtonIntoView]);
+
   useEffect(() => {
     if (!initialScrollState) {
       return;
