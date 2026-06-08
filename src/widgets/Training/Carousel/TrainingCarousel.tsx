@@ -1,6 +1,7 @@
 import { FC, useEffect, useState } from 'react';
 import { Card } from 'entities/Card/model/types';
 import { FlashCard } from 'entities/Card/ui/FlashCard/FlashCard';
+import { useCardSwipe } from './useCardSwipe';
 import styles from './TrainingCarousel.module.scss';
 
 interface TrainingCarouselProps {
@@ -51,22 +52,6 @@ export const TrainingCarousel: FC<TrainingCarouselProps> = ({ cards, onComplete,
       onProgressUpdate(currentIndex + 1);
     }
   }, [cards.length, currentIndex, onProgressUpdate]);
-
-  useEffect(() => {
-    if (currentIndex >= cards.length) {
-      setCurrentIndex(Math.max(cards.length - 1, 0));
-      setSlots(INITIAL_SLOTS);
-      setFlippedSlots({ 0: false, 1: false, 2: false });
-    }
-  }, [cards.length, currentIndex]);
-
-  if (cards.length === 0) {
-    return (
-      <div className={styles.carouselContainer}>
-        <div className={styles.emptyState}>Карточек для тренировки пока нет</div>
-      </div>
-    );
-  }
 
   const handleFlip = (slotId: SlotId) => {
     setFlippedSlots((current) => ({
@@ -131,18 +116,51 @@ export const TrainingCarousel: FC<TrainingCarouselProps> = ({ cards, onComplete,
     }
   };
 
+  const swipe = useCardSwipe({
+    canSwipeLeft: currentIndex < cards.length - 1,
+    canSwipeRight: currentIndex > 0,
+    onSwipeLeft: handleNext,
+    onSwipeRight: handlePrev,
+    onSwipeLeftBoundary: onComplete,
+  });
+
+  useEffect(() => {
+    if (currentIndex >= cards.length) {
+      setCurrentIndex(Math.max(cards.length - 1, 0));
+      setSlots(INITIAL_SLOTS);
+      setFlippedSlots({ 0: false, 1: false, 2: false });
+      swipe.resetSwipe();
+    }
+  }, [cards.length, currentIndex, swipe.resetSwipe]);
+
+  if (cards.length === 0) {
+    return (
+      <div className={styles.carouselContainer}>
+        <div className={styles.emptyState}>Карточек для тренировки пока нет</div>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.carouselContainer}>
-      <div className={styles.cardsWrapper}>
+      <div className={styles.cardsWrapper} onClickCapture={swipe.handleClickCapture}>
         {slots.map((slot) => {
           const card = cards[getCardIndex(slot.role, currentIndex)];
+          const isCurrentSlot = slot.role === 'current';
           const className = [
             styles[slot.role],
             slot.motion ? styles[slot.motion] : '',
+            isCurrentSlot && swipe.isActive ? styles.dragged : '',
+            isCurrentSlot && swipe.isDragging ? styles.dragging : '',
           ].filter(Boolean).join(' ');
 
           return (
-            <div key={slot.id} className={className}>
+            <div
+              key={slot.id}
+              className={className}
+              style={isCurrentSlot ? swipe.style : undefined}
+              {...(isCurrentSlot ? swipe.handlers : {})}
+            >
               {card && (
                 <FlashCard
                   term={card.term}
