@@ -248,6 +248,9 @@
   }
 
   .sideNavLane {
+    position: sticky;
+    z-index: 5;
+    top: 53px;
     width: calc(100% + 40px);
     height: auto;
     margin-left: -20px;
@@ -340,6 +343,10 @@
     margin-left: -14px;
   }
 
+  .sideNavLane {
+    top: 43px;
+  }
+
   .topNav {
     gap: 6px;
     padding: 4px 14px 6px;
@@ -430,10 +437,15 @@
 }
 
 @media (max-width: 380px) {
+
   .topNavLane,
   .sideNavLane {
     width: calc(100% + 20px);
     margin-left: -10px;
+  }
+
+  .sideNavLane {
+    top: 41px;
   }
 
   .topNav {
