@@ -96,7 +96,9 @@
 
 @media (max-width: 640px) {
   .trainingPage {
+    height: auto;
     padding: 14px 0 16px;
+    overflow: visible;
   }
 
   .header {

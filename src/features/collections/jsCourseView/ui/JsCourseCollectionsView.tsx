@@ -5,6 +5,7 @@ import { jsCourseParts } from '../model/courseStructure';
 import styles from './JsCourseCollectionsView.module.scss';
 
 const JS_COURSE_SCROLL_STATE_KEY = 'js-course-collections-scroll-state';
+const MOBILE_SCROLL_QUERY = '(max-width: 900px)';
 let savedScrollStateFallback: JsCourseScrollState | null = null;
 
 interface JsCourseScrollState {
@@ -72,6 +73,10 @@ const setSavedScrollState = (scrollState: JsCourseScrollState) => {
   }
 };
 
+const usesDocumentScroll = () => (
+  typeof window !== 'undefined' && window.matchMedia(MOBILE_SCROLL_QUERY).matches
+);
+
 interface JsCourseCollectionsViewProps {
   onCollectionCardClick: (collection: Collection) => void;
 }
@@ -89,6 +94,7 @@ export const JsCourseCollectionsView: FC<JsCourseCollectionsViewProps> = ({
   const sideNavRef = useRef<HTMLElement | null>(null);
   const contentRef = useRef<HTMLDivElement | null>(null);
   const programmaticScrollTimeoutRef = useRef<number | undefined>(undefined);
+  const isLeavingCollectionsRef = useRef(false);
 
   const activePart = useMemo(() => (
     jsCourseParts.find((part) => part.id === activePartId) ?? jsCourseParts[0]
@@ -145,12 +151,14 @@ export const JsCourseCollectionsView: FC<JsCourseCollectionsViewProps> = ({
   }, [updateNavScrollState]);
 
   useEffect(() => {
-    if (!initialScrollState || !contentRef.current) {
+    if (!initialScrollState) {
       return;
     }
 
     const animationFrameId = window.requestAnimationFrame(() => {
-      if (contentRef.current) {
+      if (usesDocumentScroll()) {
+        window.scrollTo(0, initialScrollState.scrollTop);
+      } else if (contentRef.current) {
         contentRef.current.scrollTop = initialScrollState.scrollTop;
       }
     });
@@ -198,7 +206,7 @@ export const JsCourseCollectionsView: FC<JsCourseCollectionsViewProps> = ({
 
   const saveCurrentScrollState = () => {
     saveScrollState(
-      contentRef.current?.scrollTop ?? 0,
+      usesDocumentScroll() ? window.scrollY : contentRef.current?.scrollTop ?? 0,
       activePartId,
       activeSectionId
     );
@@ -208,17 +216,31 @@ export const JsCourseCollectionsView: FC<JsCourseCollectionsViewProps> = ({
     const section = document.getElementById(sectionId);
     const scrollContainer = contentRef.current;
 
-    if (!(section instanceof HTMLElement) || !(scrollContainer instanceof HTMLElement)) {
+    if (!(section instanceof HTMLElement)) {
       return;
     }
-
-    const containerTop = scrollContainer.getBoundingClientRect().top;
-    const sectionTop = section.getBoundingClientRect().top;
 
     window.clearTimeout(programmaticScrollTimeoutRef.current);
     programmaticScrollTimeoutRef.current = window.setTimeout(() => {
       programmaticScrollTimeoutRef.current = undefined;
     }, 1200);
+
+    if (usesDocumentScroll()) {
+      const navHeight = topNavRef.current?.getBoundingClientRect().height ?? 0;
+
+      window.scrollTo({
+        top: window.scrollY + section.getBoundingClientRect().top - navHeight - 12,
+        behavior: 'smooth',
+      });
+      return;
+    }
+
+    if (!(scrollContainer instanceof HTMLElement)) {
+      return;
+    }
+
+    const containerTop = scrollContainer.getBoundingClientRect().top;
+    const sectionTop = section.getBoundingClientRect().top;
 
     scrollContainer.scrollTo({
       top: scrollContainer.scrollTop + sectionTop - containerTop,
@@ -232,7 +254,11 @@ export const JsCourseCollectionsView: FC<JsCourseCollectionsViewProps> = ({
 
     setActivePartId(partId);
     setActiveSectionId(nextSectionId);
-    saveScrollState(contentRef.current?.scrollTop ?? 0, partId, nextSectionId);
+    saveScrollState(
+      usesDocumentScroll() ? window.scrollY : contentRef.current?.scrollTop ?? 0,
+      partId,
+      nextSectionId
+    );
     scrollToSection(partId);
   };
 
@@ -244,17 +270,25 @@ export const JsCourseCollectionsView: FC<JsCourseCollectionsViewProps> = ({
     }
 
     setActiveSectionId(sectionId);
-    saveScrollState(contentRef.current?.scrollTop ?? 0, partId ?? activePartId, sectionId);
+    saveScrollState(
+      usesDocumentScroll() ? window.scrollY : contentRef.current?.scrollTop ?? 0,
+      partId ?? activePartId,
+      sectionId
+    );
     scrollToSection(sectionId);
   };
 
-  const onContentScroll = (event: UIEvent<HTMLDivElement>) => {
-    if (programmaticScrollTimeoutRef.current !== undefined) {
+  const updateActiveSection = useCallback((
+    scrollTop: number,
+    activationLine: number
+  ) => {
+    if (
+      isLeavingCollectionsRef.current ||
+      programmaticScrollTimeoutRef.current !== undefined
+    ) {
       return;
     }
 
-    const scrollContainer = event.currentTarget;
-    const containerTop = scrollContainer.getBoundingClientRect().top;
     let currentPart = jsCourseParts[0];
 
     for (const part of jsCourseParts) {
@@ -264,9 +298,7 @@ export const JsCourseCollectionsView: FC<JsCourseCollectionsViewProps> = ({
         continue;
       }
 
-      const partTop = partElement.getBoundingClientRect().top - containerTop;
-
-      if (partTop <= 80) {
+      if (partElement.getBoundingClientRect().top <= activationLine) {
         currentPart = part;
       }
     }
@@ -280,9 +312,7 @@ export const JsCourseCollectionsView: FC<JsCourseCollectionsViewProps> = ({
         continue;
       }
 
-      const sectionTop = sectionElement.getBoundingClientRect().top - containerTop;
-
-      if (sectionTop <= 80) {
+      if (sectionElement.getBoundingClientRect().top <= activationLine) {
         currentSectionId = section.id;
       }
     }
@@ -297,11 +327,39 @@ export const JsCourseCollectionsView: FC<JsCourseCollectionsViewProps> = ({
       setActiveSectionId(currentSectionId);
     }
 
-    saveScrollState(scrollContainer.scrollTop, currentPartId, currentSectionId);
+    saveScrollState(scrollTop, currentPartId, currentSectionId);
+  }, [activePartId, activeSectionId]);
+
+  useEffect(() => {
+    const onWindowScroll = () => {
+      if (!usesDocumentScroll()) {
+        return;
+      }
+
+      const navBottom = topNavRef.current?.getBoundingClientRect().bottom ?? 0;
+      updateActiveSection(window.scrollY, Math.max(0, navBottom) + 80);
+    };
+
+    window.addEventListener('scroll', onWindowScroll, { passive: true });
+
+    return () => window.removeEventListener('scroll', onWindowScroll);
+  }, [updateActiveSection]);
+
+  const onContentScroll = (event: UIEvent<HTMLDivElement>) => {
+    if (usesDocumentScroll()) {
+      return;
+    }
+
+    const scrollContainer = event.currentTarget;
+    updateActiveSection(
+      scrollContainer.scrollTop,
+      scrollContainer.getBoundingClientRect().top + 80
+    );
   };
 
   const onCourseCollectionCardClick = (collection: Collection) => {
     saveCurrentScrollState();
+    isLeavingCollectionsRef.current = true;
     onCollectionCardClick(collection);
   };
 

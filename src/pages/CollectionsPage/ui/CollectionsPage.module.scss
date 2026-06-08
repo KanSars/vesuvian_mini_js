@@ -32,6 +32,12 @@
   }
 }
 
+@media (max-width: 900px) {
+  .collectionsPage {
+    height: auto;
+  }
+}
+
 @media (max-width: 640px) {
   .collectionsPage {
     .header {

@@ -28,6 +28,28 @@
   min-width: 0;
 }
 
+@media (max-width: 900px) {
+  .app {
+    height: auto;
+    min-height: 100vh;
+    min-height: 100lvh;
+    overflow: visible;
+  }
+
+  .contentWrapper {
+    flex: 1 0 auto;
+    min-height: auto;
+    overflow: visible;
+  }
+
+  .main {
+    flex: 1 0 auto;
+    width: 100%;
+    min-height: auto;
+    overflow: visible;
+  }
+}
+
 @media (max-width: 640px) {
   .main {
     padding: 0 14px;
