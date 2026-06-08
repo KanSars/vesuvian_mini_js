@@ -1,4 +1,4 @@
-import { FC, useState, useEffect } from 'react';
+import { FC, TransitionEvent, useState, useEffect } from 'react';
 import { Card } from 'entities/Card/model/types';
 import { FlashCard } from 'entities/Card/ui/FlashCard/FlashCard';
 import styles from './TrainingCarousel.module.scss';
@@ -12,6 +12,7 @@ interface TrainingCarouselProps {
 export const TrainingCarousel: FC<TrainingCarouselProps> = ({ cards, onComplete, onProgressUpdate }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
+  const [pendingIndex, setPendingIndex] = useState<number | null>(null);
   
   // Состояния для анимации (как в прототипе)
   const [firstCardClass, setFirstCardClass] = useState(styles.previous);
@@ -28,6 +29,7 @@ export const TrainingCarousel: FC<TrainingCarouselProps> = ({ cards, onComplete,
     if (currentIndex >= cards.length) {
       setCurrentIndex(Math.max(cards.length - 1, 0));
       setIsFlipped(false);
+      setPendingIndex(null);
     }
   }, [cards.length, currentIndex]);
 
@@ -40,13 +42,33 @@ export const TrainingCarousel: FC<TrainingCarouselProps> = ({ cards, onComplete,
   }
 
   const handleFlip = () => {
-    setIsFlipped(!isFlipped);
+    if (pendingIndex === null) {
+      setIsFlipped((current) => !current);
+    }
+  };
+
+  const switchToCard = (targetIndex: number) => {
+    if (isFlipped) {
+      setPendingIndex(targetIndex);
+      setIsFlipped(false);
+      return;
+    }
+
+    setCurrentIndex(targetIndex);
+  };
+
+  const handleFlipEnd = (event: TransitionEvent<HTMLDivElement>) => {
+    if (pendingIndex === null || event.propertyName !== 'transform') {
+      return;
+    }
+
+    setCurrentIndex(pendingIndex);
+    setPendingIndex(null);
   };
 
   const handleNext = () => {
     if (currentIndex < cards.length - 1) {
-      setIsFlipped(false);
-      setCurrentIndex(prev => prev + 1);
+      switchToCard(currentIndex + 1);
       
       // Логика сдвига классов (упрощенная версия прототипа для плавности)
       setFirstCardClass(styles.previous);
@@ -59,8 +81,7 @@ export const TrainingCarousel: FC<TrainingCarouselProps> = ({ cards, onComplete,
 
   const handlePrev = () => {
     if (currentIndex > 0) {
-      setIsFlipped(false);
-      setCurrentIndex(prev => prev - 1);
+      switchToCard(currentIndex - 1);
     }
   };
 
@@ -85,7 +106,7 @@ export const TrainingCarousel: FC<TrainingCarouselProps> = ({ cards, onComplete,
           </div>
         )}
         
-        <div className={secondCardClass}>
+        <div className={secondCardClass} onTransitionEnd={handleFlipEnd}>
           <FlashCard 
             term={currentCard.term} 
             definition={currentCard.definition} 
@@ -113,7 +134,7 @@ export const TrainingCarousel: FC<TrainingCarouselProps> = ({ cards, onComplete,
       <div className={styles.controls}>
         <button 
           onClick={handlePrev} 
-          disabled={currentIndex === 0}
+          disabled={currentIndex === 0 || pendingIndex !== null}
           className={styles.navButton}
         >
           Назад
@@ -121,6 +142,7 @@ export const TrainingCarousel: FC<TrainingCarouselProps> = ({ cards, onComplete,
         <span className={styles.counter}>{currentIndex + 1} / {cards.length}</span>
         <button 
           onClick={handleNext} 
+          disabled={pendingIndex !== null}
           className={styles.navButton}
         >
           {currentIndex === cards.length - 1 ? 'Завершить' : 'Вперед'}
